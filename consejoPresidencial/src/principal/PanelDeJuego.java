@@ -36,13 +36,11 @@ public class PanelDeJuego extends JPanel implements Runnable {
 	//ENTIDADES Y OBJETOS
 
 	//ESTADO DE JUEGO
-	public int estadoDeJuego;
+	public int modoActual;
 	
-	public final int modoTitulo = 0;
-	public final int modoJuego = 1;
-	public final int modoPausa = 2;
-	public final int modoDialogo = 3;
-	public final int modoCombate = 4;
+	public final int MODO_TITULO = 0;
+	public final int MODO_JUEGO = 1;
+	public final int MODO_PAUSA = 2;
 	
 	// FPS
 	int FPS = 60;
@@ -58,7 +56,7 @@ public class PanelDeJuego extends JPanel implements Runnable {
 	}
 	
 	public void configuracionDeJuego() {
-		estadoDeJuego = modoCombate;
+		modoActual = MODO_JUEGO;
 	}
 
 	public void iniciarHiloDeJuego() {
@@ -113,16 +111,11 @@ public class PanelDeJuego extends JPanel implements Runnable {
 
 	public void actualizar() {
 
-		if(estadoDeJuego == modoJuego) {
-			
-			//JUGADR
-			
-			//NPC
+		if(modoActual == MODO_TITULO) {
 		}
-		if(estadoDeJuego == modoPausa) {
-			
+		if(modoActual == MODO_JUEGO) {	
 		}
-		if(estadoDeJuego == modoCombate) {
+		if(modoActual == MODO_PAUSA) {
 		}
 	}
 
@@ -136,22 +129,14 @@ public class PanelDeJuego extends JPanel implements Runnable {
 		if(teclado.comprobarTiempoDeDibujado == true) {
 			drawStart = System.nanoTime();
 		}
-		//COMBATE
-		if(estadoDeJuego == modoCombate) {
+		//TITULO
+		if(modoActual == MODO_TITULO) {
 		}
-		//PANTALLA DE TITULO
-		if(estadoDeJuego == modoTitulo) {
+		//JUEGO
+		if(modoActual == MODO_JUEGO) {
 		}
 		//OTROS
 		else {
-			
-			//BALDOSAS
-			
-			//OBJETOS
-			
-			//JUGADOR Y NPC
-			
-			//UI
 			
 		}
 

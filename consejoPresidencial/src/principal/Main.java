@@ -9,7 +9,7 @@ public class Main {
 		JFrame ventana = new JFrame();
 		ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		ventana.setResizable(false);
-		ventana.setTitle("Juego 2D");
+		ventana.setTitle("Proyecto Consejo Presidencial");
 
 		PanelDeJuego pdj = new PanelDeJuego();
 		ventana.add(pdj);
