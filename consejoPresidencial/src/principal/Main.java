@@ -18,6 +18,8 @@ public class Main {
 
 		ventana.setLocationRelativeTo(null);
 		ventana.setVisible(true);
+		//ventana.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		ventana.setResizable(true);
 
 		pdj.configuracionDeJuego();
 		pdj.iniciarHiloDeJuego();
