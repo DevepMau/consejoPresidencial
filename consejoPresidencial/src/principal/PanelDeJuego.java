@@ -4,8 +4,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 
 import javax.swing.JPanel;
+
+import objetos.NPC;
 
 public class PanelDeJuego extends JPanel implements Runnable {
 
@@ -33,7 +36,13 @@ public class PanelDeJuego extends JPanel implements Runnable {
 	Sonido se = new Sonido();
 	Thread hiloDeJuego;
 	
+	//VARIABLES DE JUEGO
+	public final Point POSICION_CENTRO = new Point(this.anchoDePantalla/2 - 150, this.altoDePantalla - 400);
+	public final Point POSICION_IZQUIERDA = new Point(this.anchoDePantalla/2 - 350,this.altoDePantalla - 400);
+	public final Point POSICION_DERECHA = new Point(this.anchoDePantalla/2 +50,this.altoDePantalla - 400);
+	
 	//ENTIDADES Y OBJETOS
+	NPC toto = new NPC("Toto-chan", "Ministra de Economia", this);
 
 	//ESTADO DE JUEGO
 	public int modoActual;
@@ -56,6 +65,7 @@ public class PanelDeJuego extends JPanel implements Runnable {
 	}
 	
 	public void configuracionDeJuego() {
+		toto.cargarImagenes("/cabezas/toto_cabeza", "/cuerpos/toto_cuerpo");
 		modoActual = MODO_JUEGO;
 	}
 
@@ -114,6 +124,7 @@ public class PanelDeJuego extends JPanel implements Runnable {
 		if(modoActual == MODO_TITULO) {
 		}
 		if(modoActual == MODO_JUEGO) {	
+			toto.actualizar();
 		}
 		if(modoActual == MODO_PAUSA) {
 		}
@@ -122,7 +133,29 @@ public class PanelDeJuego extends JPanel implements Runnable {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
-		Graphics2D g2 = (Graphics2D) g;
+	    Graphics2D g2 = (Graphics2D) g;
+
+	    // Tamaño real del panel
+	    int anchoReal = getWidth();
+	    int altoReal = getHeight();
+
+	    // Escala dinámica
+	    double escalaX = (double) anchoReal / anchoDePantalla;
+	    double escalaY = (double) altoReal / altoDePantalla;
+
+	    // Mantener proporción (opcional pero recomendado)
+	    double escala = Math.min(escalaX, escalaY);
+
+	    int offsetX = (int) ((anchoReal - anchoDePantalla * escala) / 2);
+	    int offsetY = (int) ((altoReal - altoDePantalla * escala) / 2);
+
+	    g2.translate(offsetX, offsetY);
+
+	    g2.scale(escala, escala);
+		
+	    //DIBUJAR A PARTIR DE AQUI
+	    g2.setColor(Color.white);
+	    g2.drawRect(0, 0, this.anchoDePantalla, this.altoDePantalla);
 		
 		//DEBUG
 		long drawStart = 0;
@@ -134,6 +167,7 @@ public class PanelDeJuego extends JPanel implements Runnable {
 		}
 		//JUEGO
 		if(modoActual == MODO_JUEGO) {
+			toto.dibujar(g2);
 		}
 		//OTROS
 		else {
