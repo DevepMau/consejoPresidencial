@@ -1,0 +1,120 @@
+package principal;
+
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.io.IOException;
+import java.io.InputStream;
+
+public class UI {
+	
+	PanelDeJuego pdj;
+	Graphics2D g2;
+	Font maruMonica;
+	
+	public float escala;
+	public int anchoDeLinea = 4;
+	public int contLetras = 0;
+	public String textoMostrado = "";
+	
+	public Color blancoLinea  = new Color(255, 255, 255);
+ 	public Color azulMecanico  = new Color(72, 82, 98);
+ 	public Color negroTransparente = new Color(0, 0, 0, 205);
+	
+ 	private Rectangle ventanaDialogo;
+ 	private Rectangle ventanaNombre;
+ 	private Rectangle ventanaTitulo;
+ 	
+	public UI(PanelDeJuego pdj) {
+		
+		this.pdj = pdj;
+		
+		this.ventanaDialogo = new Rectangle(8, 
+											pdj.altoDePantalla - (pdj.altoDePantalla/4) - 8, 
+											pdj.anchoDePantalla - 8, 
+											pdj.altoDePantalla/4
+											);
+		this.ventanaNombre = new Rectangle(8, 376, 156, 48);
+		this.ventanaTitulo = new Rectangle(pdj.anchoDePantalla - 304, 376, 304, 48);
+		
+		try {
+ 			InputStream is = getClass().getResourceAsStream("/fuentes/MaruMonica.ttf");
+ 			maruMonica = Font.createFont(Font.TRUETYPE_FONT, is);
+ 		} catch (FontFormatException e) {
+ 			e.printStackTrace();
+ 		} catch (IOException e) {
+ 			e.printStackTrace();
+ 		}
+		
+	}
+	
+	public void dibujar(Graphics2D g2) {
+		this.g2 = g2;
+		
+		this.escala = Math.min(
+		        (float) pdj.getWidth() / pdj.anchoDePantalla,
+		        (float) pdj.getHeight() / pdj.altoDePantalla
+		    );
+		
+		escala = Math.min(escala, 1.10f);
+		
+		g2.setFont(maruMonica);
+		g2.setColor(Color.white);
+ 		g2.setFont(g2.getFont().deriveFont(Font.BOLD, (20f*escala)));
+ 		
+ 		switch(pdj.modoActual) {
+ 			case 3 -> dibujarPantallaDialogo();
+ 		}
+		
+	}
+	
+	public void dibujarPantallaDialogo() {
+		dibujarSubVentana(ventanaNombre);
+		dibujarSubVentana(ventanaTitulo);
+		dibujarSubVentana(ventanaDialogo);
+		
+		int ajusteX = (int)(8 * escala);
+		int ajusteY = (int)(24 * escala);
+		int alturaY = 0;
+		FontMetrics fm = g2.getFontMetrics();
+		int alturaLinea = fm.getHeight();
+		
+		g2.setColor(blancoLinea);
+		g2.drawString(pdj.evento.titulo, ventanaTitulo.x + ajusteX, ventanaTitulo.y + ajusteY);
+		g2.drawString(pdj.evento.habla, ventanaNombre.x + ajusteX, ventanaNombre.y + ajusteY);
+		
+		//Texto de dialogo
+		if(contLetras < pdj.evento.descripcion.length()) {
+			textoMostrado += pdj.evento.descripcion.charAt(contLetras);
+			if(contLetras%84 == 0 && contLetras != 0) {
+				System.out.println("salta de linea");
+				textoMostrado += "\n";
+			}
+			contLetras++;
+		}
+		for(String line : textoMostrado.split("\n")) {
+			g2.drawString(line, ventanaDialogo.x + ajusteX, ventanaDialogo.y + ajusteY + alturaY);
+			alturaY += alturaLinea;
+		}
+		
+	}
+	
+	private void dibujarSubVentana(Rectangle ventana) {
+		 
+ 		g2.setColor(negroTransparente);
+ 		g2.fillRoundRect(ventana.x, ventana.y, ventana.width, ventana.height, 2, 2);
+ 		
+ 		g2.setColor(azulMecanico);
+ 		g2.setStroke(new BasicStroke(anchoDeLinea));
+ 		g2.drawRoundRect(ventana.x, ventana.y, ventana.width-10, ventana.height-10, 2, 2);
+ 		
+ 		g2.setStroke(new BasicStroke());
+ 		g2.setColor(blancoLinea);
+ 
+ 	}
+
+}
