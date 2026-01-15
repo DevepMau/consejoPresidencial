@@ -1,0 +1,40 @@
+{
+  "id": "paro_reposteria",
+  "titulo": "Paro en el club de repostería!",
+  "tipo": "evento_rapido",
+  "habla": "Anuncio Escolar",
+
+  "descripcion": "El club de repostería ha detenido todas sus actividades. Los alumnos exigen harina de mejor calidad para continuar.",
+
+  "condiciones": {
+    "anio_min": 1,
+    "anio_max": 4,
+    "presupuesto_min": 5
+  },
+
+  "opciones": [
+    {
+      "texto": "Asignar presupuesto extra para comprar mejor harina",
+      "efectos": {
+        "presupuesto": -10,
+        "popularidad": 5,
+        "afecto_toto": -2
+      }
+    },
+    {
+      "texto": "Pedirle a Toto-chan que optimice recursos",
+      "efectos": {
+        "popularidad": -2,
+        "afecto_toto": 3,
+        "estabilidad": 2
+      }
+    },
+    {
+      "texto": "Ignorar el reclamo",
+      "efectos": {
+        "popularidad": -6,
+        "estabilidad": -3
+      }
+    }
+  ]
+}

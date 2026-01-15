@@ -1,0 +1,43 @@
+{
+  "id": "elio_inclusion_01",
+  "titulo": "Puertas Abiertas",
+  "tipo": "historia",
+
+  "condiciones": {
+    "anio_min": 1,
+    "afecto_elio_min": 10
+  },
+
+  "escenas": [
+    {
+      "habla": "narrador",
+      "texto": "Elio-chan te espera en una de las aulas vacías al finalizar la jornada."
+    },
+    {
+      "habla": "elio",
+      "texto": "Smile… ¿alguna vez pensaste en cuántos quedan afuera cuando decidimos quién merece ayuda?"
+    },
+    {
+      "habla": "smile",
+      "opciones": [
+        {
+          "texto": "No siempre podemos ayudar a todos",
+          "efectos": {
+            "afecto_elio": -5
+          }
+        },
+        {
+          "texto": "Si puedo evitarlo, no dejaré a nadie atrás",
+          "efectos": {
+            "afecto_elio": 6,
+            "popularidad": 2
+          }
+        }
+      ]
+    },
+    {
+      "habla": "elio",
+      "texto": "Gracias por decir eso… ojalá alguien lo hubiera dicho antes."
+    }
+  ]
+}
