@@ -5,9 +5,14 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 
 import javax.swing.JPanel;
 
+import eventos.Evento;
+import eventos.Opcion;
 import objetos.NPC;
 
 public class PanelDeJuego extends JPanel implements Runnable {
@@ -19,7 +24,7 @@ public class PanelDeJuego extends JPanel implements Runnable {
 	final int escala = 3;
 
 	public final int tamañoDeBaldosa = tamañoOriginalDeBaldosa * escala;
-	public final int maxColDePantalla = 16;
+	public final int maxColDePantalla = 20;
 	public final int maxFilaDePantalla = 12;
 	public final int anchoDePantalla = tamañoDeBaldosa * maxColDePantalla;
 	public final int altoDePantalla = tamañoDeBaldosa * maxFilaDePantalla;
@@ -35,6 +40,7 @@ public class PanelDeJuego extends JPanel implements Runnable {
 	Sonido musica = new Sonido();
 	Sonido se = new Sonido();
 	Thread hiloDeJuego;
+	UI ui = new UI(this);
 	
 	//VARIABLES DE JUEGO
 	public final Point POSICION_CENTRO = new Point(this.anchoDePantalla/2 - 150, this.altoDePantalla - 400);
@@ -43,6 +49,13 @@ public class PanelDeJuego extends JPanel implements Runnable {
 	
 	//ENTIDADES Y OBJETOS
 	NPC toto = new NPC("Toto-chan", "Ministra de Economia", this);
+	
+	//EVENTOS
+	public Evento evento = GestorDeEventos.cargarEvento(
+            "data/eventos/paro_reposteria"
+            + ".json"
+        );
+
 
 	//ESTADO DE JUEGO
 	public int modoActual;
@@ -50,6 +63,7 @@ public class PanelDeJuego extends JPanel implements Runnable {
 	public final int MODO_TITULO = 0;
 	public final int MODO_JUEGO = 1;
 	public final int MODO_PAUSA = 2;
+	public final int MODO_DIALOGO = 3;
 	
 	// FPS
 	int FPS = 60;
@@ -66,7 +80,8 @@ public class PanelDeJuego extends JPanel implements Runnable {
 	
 	public void configuracionDeJuego() {
 		toto.cargarImagenes("/cabezas/toto_cabeza", "/cuerpos/toto_cuerpo");
-		modoActual = MODO_JUEGO;
+		modoActual = MODO_DIALOGO;
+
 	}
 
 	public void iniciarHiloDeJuego() {
@@ -162,6 +177,7 @@ public class PanelDeJuego extends JPanel implements Runnable {
 		if(teclado.comprobarTiempoDeDibujado == true) {
 			drawStart = System.nanoTime();
 		}
+		ui.dibujar(g2);
 		//TITULO
 		if(modoActual == MODO_TITULO) {
 		}
