@@ -1,0 +1,66 @@
+{
+  "id": "toto_sample_01",
+  "titulo": "Tarde de a dos",
+  "tipo": "historia",
+  "descripcion": "Todo el mundo ya se ha ido a su casa, pero tu decides quedarte a terminar con algunos documentos para el informe matutino de mañana, hasta que una figura peculiar abre la puerta de la oficina...",
+
+  "condiciones": {
+    "anio_min": 1,
+    "afecto_elio_min": 10
+  },
+
+  "escenas": [
+    {
+      "fondo":"oficina_tarde",
+      "musica":"melodia_base",
+      "dialogos": [
+        {
+          "habla": "toto",
+          "texto": "Señor presidente, no esperaba que siguiera por la escuela a estas horas."
+        },
+        {
+          "habla": "Smile",
+          "texto": "Lo mismo digo, crei que ya se habia ido a casa todo el mundo."
+        },
+        {
+          "habla": "toto",
+          "texto": "Siempre me quedo despues de horas para buscar posibles errores en los informes del dia."
+        },
+        {
+          "habla": "smile",
+          "texto": "Que deberia responder....",
+          "opciones": [
+            {
+              "texto": "Como siempre, gracias por tu duro trabajo!",
+              "efectos": {
+              "afecto_elio": 5
+              },
+              "respuesta": {
+                "habla": "toto",
+                "texto": "Solo hago lo que se espera, señor."
+              }
+            },
+            {
+              "texto": "Se agradece, pero no crees que te exiges demasiado?",
+              "efectos": {
+              "afecto_elio": -5
+              },
+              "respuesta": {
+                "habla": "toto",
+                "texto": "Para nada, esto es lo que se espera de mi como ministra."
+              }
+            }
+          ]
+        },
+        {
+          "habla": "toto",
+          "texto": "Aun le falta para terminar, señor?"
+        },
+        {
+          "habla": "smile",
+          "texto": "Solo unos documentos mas y luego me ire a casa..."
+        }
+      ]
+    }
+  ]
+}
