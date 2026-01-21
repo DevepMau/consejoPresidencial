@@ -6,11 +6,11 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
 
 import javax.swing.JPanel;
 
+import eventos.Dialogo;
+import eventos.Escena;
 import eventos.Evento;
 import eventos.Opcion;
 import objetos.NPC;
@@ -37,6 +37,7 @@ public class PanelDeJuego extends JPanel implements Runnable {
 
 	//SISTEMA
 	public Teclado teclado = new Teclado(this);
+	Raton raton = new Raton(this);
 	Sonido musica = new Sonido();
 	Sonido se = new Sonido();
 	Thread hiloDeJuego;
@@ -51,10 +52,13 @@ public class PanelDeJuego extends JPanel implements Runnable {
 	NPC toto = new NPC("Toto-chan", "Ministra de Economia", this);
 	
 	//EVENTOS
-	public Evento evento = GestorDeEventos.cargarEvento(
-            "data/eventos/paro_reposteria"
-            + ".json"
-        );
+	public Evento evento;
+	public List<Escena> escenas;
+	public List<Dialogo> dialogos;
+	public List<Opcion> opciones;
+	public int indiceEscena = -1;
+	public int indiceDialogo = 0;
+	public boolean habilitarRaton = true; 
 
 
 	//ESTADO DE JUEGO
@@ -75,6 +79,8 @@ public class PanelDeJuego extends JPanel implements Runnable {
 		this.setDoubleBuffered(true);
 		this.addKeyListener(teclado);
 		this.setFocusable(true);
+		this.addMouseListener(raton);
+	    this.addMouseMotionListener(raton);
 
 	}
 	
@@ -142,6 +148,59 @@ public class PanelDeJuego extends JPanel implements Runnable {
 			toto.actualizar();
 		}
 		if(modoActual == MODO_PAUSA) {
+		}
+		if(modoActual == MODO_DIALOGO) {
+			evento = GestorDeEventos.cargarEvento(
+		            "data/eventos/toto_sample_01"
+		            + ".json"
+		        );
+			
+			if(evento != null) {
+				
+				if(indiceEscena == -1) {
+					
+					ui.setEmisorDialogo("");
+					ui.setTituloDialogo(evento.titulo);
+					ui.setContenidoDialogo(evento.descripcion);
+					indiceEscena++;
+				}
+				if(raton.CLICK && habilitarRaton && indiceEscena >= 0) {
+					
+					habilitarRaton = false;
+					ui.resetDialogo();
+					System.out.println("escena: "+indiceEscena + " ,dialogo:"+ indiceDialogo);
+					if(indiceEscena < evento.escenas.size()) {
+						
+						if(indiceDialogo < evento.escenas.get(indiceEscena).dialogos.size()) {
+							
+							ui.setEmisorDialogo(evento.escenas.get(indiceEscena).dialogos.get(indiceDialogo).habla);
+							ui.setContenidoDialogo(evento.escenas.get(indiceEscena).dialogos.get(indiceDialogo).texto);
+							
+							opciones = evento.escenas.get(indiceEscena).dialogos.get(indiceDialogo).opciones;
+							if(opciones != null) {
+								System.out.println("hay opciones");
+							}
+							indiceDialogo++;
+						}
+						if(indiceDialogo >= evento.escenas.get(indiceEscena).dialogos.size()) {
+							
+							indiceEscena++;
+							indiceDialogo = 0;
+							opciones = null;
+						}
+					}
+					else {
+						modoActual = MODO_JUEGO;
+						evento = null;
+					}
+					
+				}
+			}
+			
+			if(!raton.CLICK) {
+				
+				habilitarRaton = true;
+			}
 		}
 	}
 
