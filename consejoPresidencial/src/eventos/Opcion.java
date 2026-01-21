@@ -6,5 +6,5 @@ public class Opcion {
 	
     public String texto;
     public Map<String, Integer> efectos;
-    
+    public Dialogo respuesta;
 }
