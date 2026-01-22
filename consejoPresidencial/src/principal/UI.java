@@ -27,10 +27,6 @@ public class UI {
 	public Color blancoLinea  = new Color(255, 255, 255);
  	public Color azulMecanico  = new Color(72, 82, 98);
  	public Color negroTransparente = new Color(0, 0, 0, 205);
-	
- 	private Rectangle ventanaDialogo;
- 	private Rectangle ventanaNombre;
- 	private Rectangle ventanaTitulo;
  	
  	//DIALOGO
  	private String tituloDialogo = "";
@@ -41,14 +37,6 @@ public class UI {
 	public UI(PanelDeJuego pdj) {
 		
 		this.pdj = pdj;
-		
-		this.ventanaDialogo = new Rectangle(pdj.anchoDePantalla/12, 
-											pdj.altoDePantalla - (pdj.altoDePantalla/4) - 8, 
-											pdj.anchoDePantalla - pdj.anchoDePantalla/6, 
-											pdj.altoDePantalla/4
-											);
-		this.ventanaNombre = new Rectangle(pdj.anchoDePantalla/12, 376, 156, 48);
-		this.ventanaTitulo = new Rectangle(pdj.anchoDePantalla - 304 - pdj.anchoDePantalla/12, 376, 304, 48);
 		
 		try {
  			InputStream is = getClass().getResourceAsStream("/fuentes/MaruMonica.ttf");
@@ -82,9 +70,9 @@ public class UI {
 	}
 	
 	public void dibujarPantallaDialogo() {
-		dibujarSubVentana(ventanaNombre);
-		dibujarSubVentana(ventanaTitulo);
-		dibujarSubVentana(ventanaDialogo);
+		dibujarSubVentana(pdj.ventanaNombre);
+		dibujarSubVentana(pdj.ventanaTitulo);
+		dibujarSubVentana(pdj.ventanaDialogo);
 		
 		int ajusteX = (int)(8 * escala);
 		int ajusteY = (int)(24 * escala);
@@ -93,15 +81,15 @@ public class UI {
 		int alturaLinea = fm.getHeight();
 		
 		g2.setColor(blancoLinea);
-		g2.drawString(tituloDialogo, ventanaTitulo.x + ajusteX, ventanaTitulo.y + ajusteY);
-		g2.drawString(emisorDialogo, ventanaNombre.x + ajusteX, ventanaNombre.y + ajusteY);
+		g2.drawString(tituloDialogo, pdj.ventanaTitulo.x + ajusteX, pdj.ventanaTitulo.y + ajusteY);
+		g2.drawString(emisorDialogo, pdj.ventanaNombre.x + ajusteX, pdj.ventanaNombre.y + ajusteY);
 		
 		//Texto de dialogo
 		if(contenidoDialogo != null) {
 			if(contLetras < contenidoDialogo.length()) {
 				textoMostrado += contenidoDialogo.charAt(contLetras);
 				
-				if(contLetras%89 == 0 && contLetras != 0) {
+				if(contLetras%84 == 0 && contLetras != 0) {
 					textoMostrado += "\n";
 				}
 				contLetras++;
@@ -112,7 +100,7 @@ public class UI {
 			}
 		}
 		for(String line : textoMostrado.split("\n")) {
-			g2.drawString(line, ventanaDialogo.x + ajusteX, ventanaDialogo.y + ajusteY + alturaY);
+			g2.drawString(line, pdj.ventanaDialogo.x + ajusteX, pdj.ventanaDialogo.y + ajusteY + alturaY);
 			alturaY += alturaLinea;
 		}
 		
@@ -125,14 +113,17 @@ public class UI {
 	public void mostrarOpciones(List<Opcion> opciones) {
 		int ajusteX = (int) (8 * escala);
 		int ajusteY = (int) (24 * escala);
-		FontMetrics fm = g2.getFontMetrics();
-		int alturaLinea = fm.getHeight();
-		int alturaY = 0;
-
+		//FontMetrics fm = g2.getFontMetrics();
+		//int alturaLinea = fm.getHeight();
+		//int alturaY = 0;
+		int indiceOpcion = 0;
+		
 		for (Opcion opcion : opciones) {
+			dibujarSubVentana(pdj.ventanaOpciones[indiceOpcion]);
 			g2.setColor(blancoLinea);
-			g2.drawString(opcion.texto, ventanaDialogo.x + ajusteX, 300 + ajusteY + alturaY);
-			alturaY += alturaLinea;
+			g2.drawString(opcion.texto, pdj.ventanaOpciones[indiceOpcion].x + ajusteX, pdj.ventanaOpciones[indiceOpcion].y + ajusteY);
+			//alturaY += alturaLinea;
+			indiceOpcion++;
 		}
 	}
 	
