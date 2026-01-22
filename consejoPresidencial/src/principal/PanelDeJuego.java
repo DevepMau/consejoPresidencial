@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.List;
 
 import javax.swing.JPanel;
@@ -14,6 +15,7 @@ import eventos.Escena;
 import eventos.Evento;
 import eventos.Opcion;
 import objetos.NPC;
+import utilidades.Herramientas;
 
 public class PanelDeJuego extends JPanel implements Runnable {
 
@@ -49,6 +51,11 @@ public class PanelDeJuego extends JPanel implements Runnable {
 	public final Point POSICION_DERECHA = new Point(this.anchoDePantalla/2 +50,this.altoDePantalla - 400);
 	
 	//ENTIDADES Y OBJETOS
+	public Rectangle ventanaDialogo;
+ 	public Rectangle ventanaNombre;
+ 	public Rectangle ventanaTitulo;
+ 	public Rectangle ventanaOpciones[];
+ 	
 	NPC toto = new NPC("Toto-chan", "Ministra de Economia", this);
 	
 	//EVENTOS
@@ -85,6 +92,7 @@ public class PanelDeJuego extends JPanel implements Runnable {
 	}
 	
 	public void configuracionDeJuego() {
+		setearVentanas();
 		toto.cargarImagenes("/cabezas/toto_cabeza", "/cuerpos/toto_cuerpo");
 		modoActual = MODO_DIALOGO;
 
@@ -150,52 +158,7 @@ public class PanelDeJuego extends JPanel implements Runnable {
 		if(modoActual == MODO_PAUSA) {
 		}
 		if(modoActual == MODO_DIALOGO) {
-			evento = GestorDeEventos.cargarEvento(
-		            "data/eventos/toto_sample_01"
-		            + ".json"
-		        );
-			
-			if(evento != null) {
-				
-				if(indiceEscena == -1) {
-					
-					ui.setEmisorDialogo("");
-					ui.setTituloDialogo(evento.titulo);
-					ui.setContenidoDialogo(evento.descripcion);
-					indiceEscena++;
-				}
-				if(raton.CLICK && habilitarRaton && indiceEscena >= 0) {
-					
-					habilitarRaton = false;
-					ui.resetDialogo();
-					System.out.println("escena: "+indiceEscena + " ,dialogo:"+ indiceDialogo);
-					if(indiceEscena < evento.escenas.size()) {
-						
-						if(indiceDialogo < evento.escenas.get(indiceEscena).dialogos.size()) {
-							
-							ui.setEmisorDialogo(evento.escenas.get(indiceEscena).dialogos.get(indiceDialogo).habla);
-							ui.setContenidoDialogo(evento.escenas.get(indiceEscena).dialogos.get(indiceDialogo).texto);
-							
-							opciones = evento.escenas.get(indiceEscena).dialogos.get(indiceDialogo).opciones;
-							if(opciones != null) {
-								System.out.println("hay opciones");
-							}
-							indiceDialogo++;
-						}
-						if(indiceDialogo >= evento.escenas.get(indiceEscena).dialogos.size()) {
-							
-							indiceEscena++;
-							indiceDialogo = 0;
-							opciones = null;
-						}
-					}
-					else {
-						modoActual = MODO_JUEGO;
-						evento = null;
-					}
-					
-				}
-			}
+			iniciarEvento("toto_sample_01");
 			
 			if(!raton.CLICK) {
 				
@@ -259,5 +222,66 @@ public class PanelDeJuego extends JPanel implements Runnable {
 
 		g2.dispose();
 
+	}
+	
+	//METODOS VARIOS
+	
+	public void iniciarEvento(String nombreEvento) {
+		this.evento = Herramientas.cargarJSonEvento(
+	            "data/eventos/"+nombreEvento+".json"
+	        );
+		
+		if(evento != null) {
+			
+			if(indiceEscena == -1) {
+				
+				ui.setEmisorDialogo("");
+				ui.setTituloDialogo(evento.titulo);
+				ui.setContenidoDialogo(evento.descripcion);
+				indiceEscena++;
+			}
+			if(raton.CLICK && habilitarRaton && indiceEscena >= 0) {
+				
+				habilitarRaton = false;
+				ui.resetDialogo();
+				if(indiceEscena < evento.escenas.size()) {
+					
+					if(indiceDialogo < evento.escenas.get(indiceEscena).dialogos.size()) {
+						
+						ui.setEmisorDialogo(evento.escenas.get(indiceEscena).dialogos.get(indiceDialogo).habla);
+						ui.setContenidoDialogo(evento.escenas.get(indiceEscena).dialogos.get(indiceDialogo).texto);
+						
+						opciones = evento.escenas.get(indiceEscena).dialogos.get(indiceDialogo).opciones;
+						if(opciones != null) {
+							System.out.println("hay opciones");
+						}
+						indiceDialogo++;
+					}
+					if(indiceDialogo >= evento.escenas.get(indiceEscena).dialogos.size()) {
+						
+						indiceEscena++;
+						indiceDialogo = 0;
+						opciones = null;
+					}
+				}
+				else {
+					modoActual = MODO_JUEGO;
+					evento = null;
+				}	
+			}
+		}
+	}
+	
+	public void setearVentanas() {
+		int unidad = this.tamañoDeBaldosa;
+		int separacion = 56;
+		
+		this.ventanaDialogo = new Rectangle(unidad*2, unidad*9, unidad*16, unidad*3);
+	 	this.ventanaNombre = new Rectangle(unidad*2, unidad*8, unidad*3, unidad);
+	 	this.ventanaTitulo = new Rectangle(unidad*12, unidad*8, unidad*6, unidad);
+	 	this.ventanaOpciones = new Rectangle[3];
+		this.ventanaOpciones[0] = new Rectangle(unidad*5, unidad*3, unidad*10, unidad);
+		this.ventanaOpciones[1] = new Rectangle(unidad*5, this.ventanaOpciones[0].y + separacion, unidad*10, unidad);
+		this.ventanaOpciones[2] = new Rectangle(unidad*5, this.ventanaOpciones[1].y + separacion, unidad*10, unidad);
 	}
 }
